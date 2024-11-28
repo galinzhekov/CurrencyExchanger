@@ -64,7 +64,6 @@ fun CurrencyConverterScreen(viewModel: CurrencyViewModel = hiltViewModel()) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Display balances
                 LazyRow(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()

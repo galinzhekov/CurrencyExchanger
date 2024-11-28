@@ -7,7 +7,6 @@ data class CurrencyUiState(
     val toCurrency: String = "USD",
     val message: String = "",
     val receivedAmount: String = "",
-    val rates: Map<String, Double> = emptyMap(),
-    val isLoading: Boolean = false
+    val rates: Map<String, Double> = emptyMap()
 )
 

@@ -1,6 +1,5 @@
 package com.example.feature.currency.logic
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.logic.BaseViewModel
 import com.example.core.utils.CommissionRule
@@ -25,29 +24,21 @@ class CurrencyViewModel @Inject constructor(
         startPeriodicRateFetching()
     }
 
-    // Function to fetch rates once
     fun refreshRates() {
         viewModelScope.launch {
-            updateUiState { it.copy(isLoading = true) } // Show loading state
             try {
                 val response = repository.fetchExchangeRates()
                 updateUiState { state ->
                     state.copy(
-                        rates = response.rates,
-                        isLoading = false
+                        rates = response.rates
                     )
                 }
             } catch (e: Exception) {
-                updateUiState { state ->
-                    state.copy(
-                        isLoading = false
-                    )
-                }
+                e.printStackTrace()
             }
         }
     }
 
-    // Function to start periodic fetching of exchange rates
     private fun startPeriodicRateFetching() {
         viewModelScope.launch {
             while (true) {
@@ -56,13 +47,13 @@ class CurrencyViewModel @Inject constructor(
                         repository.fetchExchangeRates()
                     }
                     updateUiState { state ->
-                        state.copy(rates = response.rates) // Update only the rates
+                        state.copy(rates = response.rates)
                     }
-                    Log.d("DropdownOptions", response.rates.toString())
+
                 } catch (e: Exception) {
-                    // Log or handle the error, but don't break the loop
+                    e.printStackTrace()
                 }
-                delay(5000) // Wait for 5 seconds before fetching again
+                delay(5000)
             }
         }
     }
@@ -106,11 +97,9 @@ class CurrencyViewModel @Inject constructor(
             return
         }
 
-        // Perform the balance updates
         currentBalances[fromCurrency] = fromBalance - amount - result.commission
         currentBalances[toCurrency] = (currentBalances[toCurrency] ?: 0.0) + result.convertedAmount
 
-        // Update the UI state with conversion details
         updateUiState {
             it.copy(
                 balances = currentBalances,
